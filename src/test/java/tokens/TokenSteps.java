@@ -18,12 +18,7 @@ public class TokenSteps {
         this.id = id;
     }
 
-    @When("the customer requests {int} token")
-    public void theCustomerRequestsToken(int count) {
-        tokenClient.requestTokens(id, count);
-    }
-
-    @And("the customer requests {int} tokens")
+    @When("the customer requests {int} tokens")
     public void theCustomerRequestsTokens(int count) {
         tokenClient.requestTokens(id, count);
     }
@@ -33,12 +28,12 @@ public class TokenSteps {
         assertEquals(count, tokenClient.tokens.size());
     }
 
-    @And("he has gotten an error")
+    @Then("he has gotten an error")
     public void heHasGottenAnError() {
         assertNotEquals("", tokenClient.error);
     }
 
-    @And("he has not gotten an error")
+    @Then("he has not gotten an error")
     public void heHasNotGottenAnError() {
         assertEquals("", tokenClient.error);
     }
