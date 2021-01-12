@@ -34,8 +34,6 @@ public class TokenClient {
                 .request()
                 .post(Entity.entity(json, MediaType.APPLICATION_JSON_TYPE));
 
-        System.out.println(response.getStatus());
-
         if (response.getStatus() != 200){
             error = response.readEntity(String.class);
             return;

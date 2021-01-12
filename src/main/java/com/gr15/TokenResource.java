@@ -21,23 +21,25 @@ public class TokenResource {
     HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
     SecureRandom random = new SecureRandom();
 
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public JsonArray createTokens(JsonObject json) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
-        if (!tokenMap.containsKey(json.getString("id"))) {
-            tokenMap.put(json.getString("id"), new LinkedList<String>());
-        }
+        if (!tokenMap.containsKey(json.getString("id"))) tokenMap.put(json.getString("id"), new LinkedList<>());
 
-        if (json.getInt("count") > 5){
-            JsonObject response = Json.createObjectBuilder()
-                    .add("errorMessage", "You cannot request more than 5 tokens").build();
+
+        if (json.getInt("count") > 5) {//Too many tokens requested
+            JsonObject response = Json.createObjectBuilder().add("errorMessage", "You cannot request more than 5 tokens").build();
             throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
         }
-
-        if (tokenMap.get(json.getString("id")).size() <= 1) {
+        else if (tokenMap.get(json.getString("id")).size() > 1) { //Account has too many tokens
+            JsonObject response = Json.createObjectBuilder().add("errorMessage", "Account has more than 1 token").build();
+            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
+        }
+        else { //Success
 
             for (int i = 0; i < json.getInt("count"); i++) {
 
@@ -46,28 +48,21 @@ public class TokenResource {
                 tokenMap.get(json.getString("id")).add(token);
 
             }
-        }
-        else {
-            JsonObject response = Json.createObjectBuilder()
-                    .add("errorMessage", "Account has more than 1 token").build();
-            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
+
         }
 
         return arrayBuilder.build();
     }
 
 
-
     public String tokenBuilder() {
         char[] values = new char[TOKEN_LENGTH];
 
         for (int i = 0; i < TOKEN_LENGTH; i++) {
-
             if ((i + 1) % (TOKEN_WORD_LENGTH + 1) == 0)
                 values[i] = '-';
             else
                 values[i] = SYMBOLS.charAt(random.nextInt(SYMBOLS.length()));
-
         }
 
         String token = new String(values);
