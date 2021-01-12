@@ -31,6 +31,12 @@ public class TokenResource {
             tokenMap.put(json.getString("id"), new LinkedList<String>());
         }
 
+        if (json.getInt("count") > 5){
+            JsonObject response = Json.createObjectBuilder()
+                    .add("errorMessage", "You cannot request more than 5 tokens").build();
+            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
+        }
+
         if (tokenMap.get(json.getString("id")).size() <= 1) {
 
             for (int i = 0; i < json.getInt("count"); i++) {
