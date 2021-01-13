@@ -69,4 +69,16 @@ public class TokenResource {
         System.out.println(token);
         return token;
     }
+
+    public boolean consumeToken(String token){
+        for (LinkedList<String> tokens: tokenMap.values()){
+            for (String storedToken: tokens){
+                if (storedToken.equals(token)){
+                    tokens.remove(storedToken);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
