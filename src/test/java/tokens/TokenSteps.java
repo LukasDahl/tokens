@@ -5,6 +5,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.util.UUID;
+
 import static org.junit.Assert.*;
 
 /**
@@ -16,6 +18,10 @@ public class TokenSteps {
     TokenClient tokenClient = new TokenClient();
     String id = "";
 
+    @Given("a customer with a random account id")
+    public void aCustomerWithARandomAccountId() {
+        id = UUID.randomUUID().toString();
+    }
 
     @Given("a customer with account id {string}")
     public void aCustomerWithAccountIdWithTokens(String id) {
@@ -41,4 +47,6 @@ public class TokenSteps {
     public void heHasNotGottenAnError() {
         assertEquals("", tokenClient.error);
     }
+
+
 }
