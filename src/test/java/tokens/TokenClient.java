@@ -11,6 +11,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.LinkedList;
 
+/**
+ * @author Lukas Amtoft Dahl
+ */
+
 public class TokenClient {
 
     WebTarget baseUrl;

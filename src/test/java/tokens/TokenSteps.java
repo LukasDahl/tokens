@@ -7,6 +7,10 @@ import io.cucumber.java.en.When;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Lukas Amtoft Dahl
+ */
+
 public class TokenSteps {
 
     TokenClient tokenClient = new TokenClient();
