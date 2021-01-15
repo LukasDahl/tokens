@@ -28,6 +28,8 @@ public class RabbitMqListener {
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
+        factory.setPort(8015);
+
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
