@@ -25,16 +25,17 @@ public class TokenManager {
 
     private static TokenManager instance = null;
 
-   private final QueueService queueService = new QueueService(new RabbitMqSender());
+    private final QueueService queueService = new QueueService(new RabbitMqSender());
     private final HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
     private final HashMap<String, LinkedList<String>> usedTokenMap = new HashMap<>();
 
-    public static TokenManager getInstance(){
+    public static TokenManager getInstance() {
         if (instance == null) instance = new TokenManager();
         return instance;
     }
 
-    private TokenManager(){}
+    private TokenManager() {
+    }
 
     public static String tokenBuilder() {
         char[] values = new char[TOKEN_LENGTH];
@@ -51,19 +52,19 @@ public class TokenManager {
         return token;
     }
 
-    public TokenInfo consumeToken(String token){
-        for (String key: tokenMap.keySet()){
-            for (String storedToken: tokenMap.get(key)){
-                if (storedToken.equals(token)){
+    public TokenInfo consumeToken(String token) {
+        for (String key : tokenMap.keySet()) {
+            for (String storedToken : tokenMap.get(key)) {
+                if (storedToken.equals(token)) {
                     usedTokenMap.get(key).add(storedToken);
                     tokenMap.get(key).remove(storedToken);
                     return new TokenInfo(storedToken, false, key);
                 }
             }
         }
-        for (String key: usedTokenMap.keySet()){
-            for (String storedToken: usedTokenMap.get(key)){
-                if (storedToken.equals(token)){
+        for (String key : usedTokenMap.keySet()) {
+            for (String storedToken : usedTokenMap.get(key)) {
+                if (storedToken.equals(token)) {
                     return new TokenInfo(storedToken, true, key);
                 }
             }
@@ -73,40 +74,27 @@ public class TokenManager {
 
     public boolean accountExists(String accountID) throws QueueException {
         boolean exists;
-        System.out.println("AccountID before split: " + accountID);
-        if (!accountID.split(";")[1].equals("test")) {
-            exists = true;
-            System.out.println("Account check skipped");
-        }
-        else {
-            System.out.println("Account check running");
-            exists = queueService.accountExists(accountID);
-        }
-
+        System.out.println("Account check running");
+        exists = queueService.accountExists(accountID);
         System.out.println("Exists in accountExists: " + exists);
-
         if (exists) {
             if (!tokenMap.containsKey(accountID)) {
                 tokenMap.put(accountID, new LinkedList<>());
                 usedTokenMap.put(accountID, new LinkedList<>());
             }
         }
-        System.out.println("AccountID after split: " + accountID);
         return exists;
     }
 
-    public String[] generateTokens(int count, String accountID) throws BadRequestException{
-        System.out.println("AccountID in generateTokens: " + accountID);
+    public String[] generateTokens(int count, String accountID) throws BadRequestException {
         String[] stringArray = new String[count];
         if (count > 5) {//Too many tokens requested
             JsonObject response = Json.createObjectBuilder().add("errorMessage", "You cannot request more than 5 tokens").build();
             throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
-        }
-        else if (tokenMap.get(accountID).size() > 1) { //Account has too many tokens
+        } else if (tokenMap.get(accountID).size() > 1) { //Account has too many tokens
             JsonObject response = Json.createObjectBuilder().add("errorMessage", "Account has more than 1 token").build();
             throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
-        }
-        else { //Success
+        } else { //Success
             for (int i = 0; i < count; i++) {
                 String token = TokenManager.tokenBuilder();
                 stringArray[i] = token;
