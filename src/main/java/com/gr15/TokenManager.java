@@ -25,12 +25,14 @@ public class TokenManager {
     private static TokenManager instance = null;
 
     private final QueueService queueService = new QueueService(new RabbitMqSender());
-    private HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
+    private final HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
 
     public static TokenManager getInstance(){
         if (instance == null) instance = new TokenManager();
         return instance;
     }
+
+    private TokenManager(){}
 
     public static String tokenBuilder() {
         char[] values = new char[TOKEN_LENGTH];
