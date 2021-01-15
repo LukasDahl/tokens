@@ -22,7 +22,7 @@ public class RabbitMqSender implements IEventSender {
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
-        factory.setPort(8015);
+        factory.setPort(5672);
 
         try (Connection connection = factory.newConnection(); Channel channel = connection.createChannel()) {
 
