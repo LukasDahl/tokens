@@ -24,7 +24,9 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String ALL_EVENT_BASE = "#";
 
     private static final String TOKEN_CMD_BASE = "token.cmds.";
+    private static final String TOKEN_EVENT_BASE = "token.events.";
     private static final String ACCOUNT_CMD_BASE = "account.cmds.";
+    private static final String ACCOUNT_EVENT_BASE = "account.events.";
     private static final String TRANSACTION_EVENT_BASE = "transaction.events.";
 
     private static final String VALIDATE_TOKEN_CMD = "validateToken";
@@ -52,20 +54,6 @@ public class QueueService implements IEventReceiver, IQueueService {
         }
     }
 
-    @Override
-    public TokenInfo validateToken(String token) throws QueueException {
-
-        Event event = new Event(VALIDATE_TOKEN_CMD, token);
-
-        tokenInfoResult = new CompletableFuture<TokenInfo>();
-        try {
-            eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, TOKEN_CMD_BASE + VALIDATE_TOKEN_CMD);
-        } catch (Exception e) {
-            throw new QueueException("Error while validating token");
-        }
-
-        return tokenInfoResult.join();
-    }
 
     public boolean accountExists(String accountID) throws QueueException {
         Event event = new Event(ACCOUNT_EXISTS_CMD, accountID);
@@ -95,25 +83,18 @@ public class QueueService implements IEventReceiver, IQueueService {
             String account = tokenManager.consumeToken(token);
             if (account.equals("Token not found")){
                 String reply = account;
-                response = new Event(VALIDATE_TOKEN_CMD, reply);
+                response = new Event(TOKEN_VALIDATED_EVENT, reply);
             }
             else {
                 TokenInfo reply = new TokenInfo(token, account);
-                response = new Event(VALIDATE_TOKEN_CMD, reply);
+                response = new Event(TOKEN_VALIDATED_EVENT, reply);
             }
 
             try {
-                eventSender.sendEvent(response, EXCHANGE_NAME, QUEUE_TYPE, TOKEN_CMD_BASE + TOKEN_VALIDATED_EVENT);
+                eventSender.sendEvent(response, EXCHANGE_NAME, QUEUE_TYPE, TOKEN_EVENT_BASE + TOKEN_VALIDATED_EVENT);
             } catch (Exception e) {
                 throw new QueueException("Error while returning token");
             }
-        }
-        else if (event.getEventType().equals(TOKEN_VALIDATED_EVENT)) {
-
-            var tokenInfo = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), TokenInfo.class);
-
-            tokenInfoResult.complete(tokenInfo);
-
         }
         else if (event.getEventType().equals(ACCOUNT_EXISTS_EVENT)) {
 

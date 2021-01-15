@@ -10,6 +10,6 @@ import com.gr15.messaging.models.TokenInfo;
 
 public interface IQueueService {
 
-    TokenInfo validateToken(String token) throws QueueException;
+    boolean accountExists(String accountID) throws QueueException;
 
 }
