@@ -3,6 +3,11 @@ package com.gr15;
 import com.gr15.exceptions.QueueException;
 import com.gr15.messaging.rabbitmq.RabbitMqSender;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -61,6 +66,26 @@ public class TokenManager {
                 tokenMap.put(accountID, new LinkedList<>());
         }
         return exists;
+    }
+
+    public String[] generateTokens(int count, String accountID) throws BadRequestException{
+        String[] stringArray = new String[count];
+        if (count > 5) {//Too many tokens requested
+            JsonObject response = Json.createObjectBuilder().add("errorMessage", "You cannot request more than 5 tokens").build();
+            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
+        }
+        else if (tokenMap.get(accountID).size() > 1) { //Account has too many tokens
+            JsonObject response = Json.createObjectBuilder().add("errorMessage", "Account has more than 1 token").build();
+            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
+        }
+        else { //Success
+            for (int i = 0; i < count; i++) {
+                String token = TokenManager.tokenBuilder();
+                stringArray[i] = token;
+                tokenMap.get(accountID).add(token);
+            }
+        }
+        return stringArray;
     }
 
 

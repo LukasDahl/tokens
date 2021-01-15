@@ -69,9 +69,9 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     public boolean accountExists(String accountID) throws QueueException {
         Event event = new Event(ACCOUNT_EXISTS_CMD, accountID);
-        accountExistsResult = new CompletableFuture<>();
+        accountExistsResult = new CompletableFuture<Boolean>();
         try {
-            eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, TOKEN_CMD_BASE + VALIDATE_TOKEN_CMD);
+            eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_CMD_BASE + ACCOUNT_EXISTS_CMD);
         } catch (Exception e) {
             throw new QueueException("Error while validating account");
         }

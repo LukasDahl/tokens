@@ -39,22 +39,10 @@ public class TokenResource {
             throw new InternalServerErrorException(Response.status(500).entity(response).type(MediaType.APPLICATION_JSON).build());
         }
 
+        String[] stringArray = tokenManager.generateTokens(json.getInt("count"), json.getString("id"));
 
-        if (json.getInt("count") > 5) {//Too many tokens requested
-            JsonObject response = Json.createObjectBuilder().add("errorMessage", "You cannot request more than 5 tokens").build();
-            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
-        }
-        else if (tokenMap.get(json.getString("id")).size() > 1) { //Account has too many tokens
-            JsonObject response = Json.createObjectBuilder().add("errorMessage", "Account has more than 1 token").build();
-            throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
-        }
-        else { //Success
-            for (int i = 0; i < json.getInt("count"); i++) {
-                String token = TokenManager.tokenBuilder();
-                arrayBuilder.add(token);
-                tokenMap.get(json.getString("id")).add(token);
-            }
-        }
+        for (String token: stringArray)
+            arrayBuilder.add(token);
 
         return arrayBuilder.build();
     }
