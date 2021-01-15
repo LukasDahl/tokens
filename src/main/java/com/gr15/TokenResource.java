@@ -1,5 +1,7 @@
 package com.gr15;
 
+import com.gr15.exceptions.QueueException;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -19,6 +21,7 @@ import java.util.LinkedList;
 public class TokenResource {
 
     HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
+    TokenManager tokenManager = TokenManager.getInstance();
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -26,7 +29,16 @@ public class TokenResource {
     public JsonArray createTokens(JsonObject json) {
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
-        if (!tokenMap.containsKey(json.getString("id"))) tokenMap.put(json.getString("id"), new LinkedList<>());
+        try {
+            if (!tokenManager.accountExists(json.getString("id"))) {
+                JsonObject response = Json.createObjectBuilder().add("errorMessage", "Account does not exist").build();
+                throw new BadRequestException(Response.status(400).entity(response).type(MediaType.APPLICATION_JSON).build());
+            }
+        } catch (QueueException e) {
+            JsonObject response = Json.createObjectBuilder().add("errorMessage", e.getMessage()).build();
+            throw new InternalServerErrorException(Response.status(500).entity(response).type(MediaType.APPLICATION_JSON).build());
+        }
+
 
         if (json.getInt("count") > 5) {//Too many tokens requested
             JsonObject response = Json.createObjectBuilder().add("errorMessage", "You cannot request more than 5 tokens").build();
@@ -38,24 +50,12 @@ public class TokenResource {
         }
         else { //Success
             for (int i = 0; i < json.getInt("count"); i++) {
-                String token = Token.tokenBuilder();
+                String token = TokenManager.tokenBuilder();
                 arrayBuilder.add(token);
                 tokenMap.get(json.getString("id")).add(token);
             }
         }
 
         return arrayBuilder.build();
-    }
-
-    public boolean consumeToken(String token){
-        for (LinkedList<String> tokens: tokenMap.values()){
-            for (String storedToken: tokens){
-                if (storedToken.equals(token)){
-                    tokens.remove(storedToken);
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }
