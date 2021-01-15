@@ -23,7 +23,7 @@ public class TokenClient {
 
     public TokenClient() {
         Client client = ClientBuilder.newClient();
-        baseUrl = client.target("http://localhost:8080/");
+        baseUrl = client.target("http://localhost:8015/");
     }
 
     public void requestTokens(String id, int count) {
