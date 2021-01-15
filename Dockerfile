@@ -7,4 +7,4 @@ COPY target/tokens-1.0.0-SNAPSHOT-runner.jar /usr/src
 WORKDIR /usr/src
 
 CMD java -Xmx64m \
-    -jar payments-1.0.0-SNAPSHOT-runner.jar
+    -jar tokens-1.0.0-SNAPSHOT-runner.jar
