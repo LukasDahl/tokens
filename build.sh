@@ -12,4 +12,4 @@ docker-compose up -d --build
 
 sleep 2s
 
-mvn clean test
+mvn test
