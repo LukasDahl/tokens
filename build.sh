@@ -1,0 +1,11 @@
+#!/bin/bash
+#title          :build.sh
+#description    :This script builds the payment service
+#author         :Lukas Amtoft Dahl
+#==============================================================================
+
+set -e
+
+mvn clean package
+
+docker build -t tokens .

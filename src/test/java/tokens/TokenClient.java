@@ -1,5 +1,7 @@
 package tokens;
 
+import com.gr15.messaging.rabbitmq.RabbitMqSender;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -20,6 +22,7 @@ public class TokenClient {
     WebTarget baseUrl;
     LinkedList<String> tokens = new LinkedList<>();
     String error = "";
+    RabbitMQTestDummy rabbitMQTestDummy = new RabbitMQTestDummy(new RabbitMqSender());
 
     public TokenClient() {
         Client client = ClientBuilder.newClient();

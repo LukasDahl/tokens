@@ -20,7 +20,7 @@ public class TokenSteps {
 
     @Given("a customer with a random account id")
     public void aCustomerWithARandomAccountId() {
-        id = UUID.randomUUID().toString();
+        id = UUID.randomUUID().toString() + ";test";
     }
 
     @Given("a customer with account id {string}")
