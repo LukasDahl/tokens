@@ -13,4 +13,4 @@ docker run -d -p 8080:8080 tokens
 
 sleep 2s
 
-mvn test
+mvn clean test
