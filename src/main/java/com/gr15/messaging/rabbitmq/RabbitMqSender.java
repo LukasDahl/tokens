@@ -21,7 +21,7 @@ public class RabbitMqSender implements IEventSender {
     public void sendEvent(Event event, String exchangeName, String queueType, String topic) throws Exception {
 
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost("my-rabbit");
 
 
         try (Connection connection = factory.newConnection(); Channel channel = connection.createChannel()) {
