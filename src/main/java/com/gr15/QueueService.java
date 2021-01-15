@@ -92,8 +92,9 @@ public class QueueService implements IEventReceiver, IQueueService {
         else if (event.getEventType().equals(ACCOUNT_EXISTS_EVENT)) {
 
             var response = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
-
-            accountExistsResult.complete(response.split(",")[1].equals("1"));
+            boolean exists = response.split(",")[1].equals("1");
+            System.out.println("Exists: " + exists);
+            accountExistsResult.complete(exists);
 
         }
         else if (event.getEventType().equals(ACCOUNT_EXISTS_CMD)){
@@ -105,7 +106,7 @@ public class QueueService implements IEventReceiver, IQueueService {
 
             Event response;
 
-            response = new Event(TOKEN_VALIDATED_EVENT, account + ",1");
+            response = new Event(ACCOUNT_EXISTS_EVENT, account + ",1");
 
             try {
                 eventSender.sendEvent(response, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);

@@ -25,7 +25,7 @@ public class TokenManager {
 
     private static TokenManager instance = null;
 
-   // private final QueueService queueService = new QueueService(new RabbitMqSender());
+   private final QueueService queueService = new QueueService(new RabbitMqSender());
     private final HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
     private final HashMap<String, LinkedList<String>> usedTokenMap = new HashMap<>();
 
@@ -73,16 +73,17 @@ public class TokenManager {
 
     public boolean accountExists(String accountID) throws QueueException {
         boolean exists;
-        if (accountID.split(";")[1].equals("test")) {
+        System.out.println("AccountID before split: " + accountID);
+        if (!accountID.split(";")[1].equals("test")) {
             exists = true;
             System.out.println("Account check skipped");
         }
         else {
             System.out.println("Account check running");
-           // exists = queueService.accountExists(accountID);
-            exists = true;
-
+            exists = queueService.accountExists(accountID);
         }
+
+        System.out.println("Exists in accountExists: " + exists);
 
         if (exists) {
             if (!tokenMap.containsKey(accountID)) {
@@ -90,10 +91,12 @@ public class TokenManager {
                 usedTokenMap.put(accountID, new LinkedList<>());
             }
         }
+        System.out.println("AccountID after split: " + accountID);
         return exists;
     }
 
     public String[] generateTokens(int count, String accountID) throws BadRequestException{
+        System.out.println("AccountID in generateTokens: " + accountID);
         String[] stringArray = new String[count];
         if (count > 5) {//Too many tokens requested
             JsonObject response = Json.createObjectBuilder().add("errorMessage", "You cannot request more than 5 tokens").build();
