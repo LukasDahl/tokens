@@ -23,25 +23,24 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     private static final String ALL_EVENT_BASE = "#";
 
-    private static final String TOKEN_CMD_BASE = "token.cmds.";
+    //private static final String TOKEN_CMD_BASE = "token.cmds.";
     private static final String TOKEN_EVENT_BASE = "token.events.";
     private static final String ACCOUNT_CMD_BASE = "account.cmds.";
-    private static final String ACCOUNT_EVENT_BASE = "account.events.";
-    private static final String TRANSACTION_EVENT_BASE = "transaction.events.";
+    // private static final String ACCOUNT_EVENT_BASE = "account.events.";
+    // private static final String TRANSACTION_EVENT_BASE = "transaction.events.";
 
     private static final String VALIDATE_TOKEN_CMD = "validateToken";
-    private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
-    private static final String ACCOUNT_EXISTS_CMD = "accountExists";
+    // private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
+    private static final String ACCOUNT_EXISTS_CMD = "accountExistsRequest";
     // private static final String VALIDATE_ACCOUNTS_CMD = "validateAccounts";
 
     private static final String TOKEN_VALIDATED_EVENT = "tokenValidated";
-    private static final String ACCOUNT_VALIDATED_EVENT = "accountValidated";
-    private static final String ACCOUNT_EXISTS_EVENT = "accountExists";
+    // private static final String ACCOUNT_VALIDATED_EVENT = "accountValidated";
+    private static final String ACCOUNT_EXISTS_EVENT = "accountExistsResponse";
     // private static final String ACCOUNTS_VALIDATED_EVENT = "accountsValidated";
-    private static final String TRANSACTION_CREATED_EVENT = "transactionCreated";
+    // private static final String TRANSACTION_CREATED_EVENT = "transactionCreated";
 
-    private IEventSender eventSender;
-    private CompletableFuture<TokenInfo> tokenInfoResult;
+    private final IEventSender eventSender;
     private CompletableFuture<Boolean> accountExistsResult;
 
     public QueueService(IEventSender eventSender) {
@@ -57,7 +56,7 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     public boolean accountExists(String accountID) throws QueueException {
         Event event = new Event(ACCOUNT_EXISTS_CMD, accountID);
-        accountExistsResult = new CompletableFuture<Boolean>();
+        accountExistsResult = new CompletableFuture<>();
         try {
             eventSender.sendEvent(event, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_CMD_BASE + ACCOUNT_EXISTS_CMD);
         } catch (Exception e) {
