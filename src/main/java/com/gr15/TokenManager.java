@@ -73,10 +73,15 @@ public class TokenManager {
 
     public boolean accountExists(String accountID) throws QueueException {
         boolean exists;
-        if (accountID.split(";")[1].equals("test"))
+        if (accountID.split(";")[1].equals("test")) {
             exists = true;
-        else
+            System.out.println("Account check skipped");
+        }
+        else {
+            System.out.println("Account check running");
             exists = queueService.accountExists(accountID);
+
+        }
 
         if (exists) {
             if (!tokenMap.containsKey(accountID)) {
