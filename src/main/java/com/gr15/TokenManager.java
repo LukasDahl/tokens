@@ -25,7 +25,7 @@ public class TokenManager {
 
     private static TokenManager instance = null;
 
-    private final QueueService queueService = new QueueService(new RabbitMqSender());
+   // private final QueueService queueService = new QueueService(new RabbitMqSender());
     private final HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
     private final HashMap<String, LinkedList<String>> usedTokenMap = new HashMap<>();
 
@@ -79,7 +79,8 @@ public class TokenManager {
         }
         else {
             System.out.println("Account check running");
-            exists = queueService.accountExists(accountID);
+           // exists = queueService.accountExists(accountID);
+            exists = true;
 
         }
 
