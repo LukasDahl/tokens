@@ -8,8 +8,7 @@ set -e
 
 mvn clean package -Dquarkus.package.type=uber-jar
 
-docker build -t tokens .
-docker run -d -p 8080:8080 tokens
+docker-compose up -d --build
 
 sleep 2s
 

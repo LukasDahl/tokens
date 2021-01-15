@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  demo:
+    build: .
+    image: tokens
+    container_name: tokens
+    ports:
+    - "8080:8080"
