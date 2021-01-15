@@ -29,6 +29,8 @@ public class RabbitMqListener {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         factory.setPort(5672);
+        factory.setUsername("g-15");
+        factory.setPassword("8badSS*H@Xw2Y$bL");
 
 
         Connection connection = factory.newConnection();
