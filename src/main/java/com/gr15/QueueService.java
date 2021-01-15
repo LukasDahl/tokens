@@ -26,7 +26,7 @@ public class QueueService implements IEventReceiver, IQueueService {
     //private static final String TOKEN_CMD_BASE = "token.cmds.";
     private static final String TOKEN_EVENT_BASE = "token.events.";
     private static final String ACCOUNT_CMD_BASE = "account.cmds.";
-    // private static final String ACCOUNT_EVENT_BASE = "account.events.";
+    private static final String ACCOUNT_EVENT_BASE = "account.events.";
     // private static final String TRANSACTION_EVENT_BASE = "transaction.events.";
 
     private static final String VALIDATE_TOKEN_CMD = "validateToken";
@@ -95,7 +95,25 @@ public class QueueService implements IEventReceiver, IQueueService {
 
             accountExistsResult.complete(response.split(",")[1].equals("1"));
 
-        } else {
+        }
+        else if (event.getEventType().equals(ACCOUNT_EXISTS_CMD)){
+
+            var account = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
+
+            if (!account.split(";")[1].equals("test"))
+                return;
+
+            Event response;
+
+            response = new Event(TOKEN_VALIDATED_EVENT, account + ",1");
+
+            try {
+                eventSender.sendEvent(response, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
+            } catch (Exception e) {
+                throw new QueueException("Error while validating account");
+            }
+        }
+        else {
             System.out.println("event ignored: " + event);
         }
     }
