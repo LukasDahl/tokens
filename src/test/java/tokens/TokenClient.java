@@ -22,7 +22,7 @@ public class TokenClient {
     WebTarget baseUrl;
     LinkedList<String> tokens = new LinkedList<>();
     String error = "";
-    //RabbitMQTestDummy rabbitMQTestDummy = new RabbitMQTestDummy(new RabbitMqSender());
+    RabbitMQTestDummy rabbitMQTestDummy = new RabbitMQTestDummy(new RabbitMqSender());
 
     public TokenClient() {
         Client client = ClientBuilder.newClient();

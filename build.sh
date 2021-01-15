@@ -10,3 +10,7 @@ mvn clean package
 
 docker build -t tokens .
 docker run -d -p8080:8080 tokens
+
+sleep 2s
+
+mvn test
