@@ -27,7 +27,7 @@ public class RabbitMqListener {
     public void listen(String exchangeName, String queueType, String topic) throws Exception {
 
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("rabbitMq");
+        factory.setHost("localhost");
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();

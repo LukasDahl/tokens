@@ -23,7 +23,7 @@ public class TokenClient {
 
     public TokenClient() {
         Client client = ClientBuilder.newClient();
-        baseUrl = client.target("http://localhost:8015/");
+        baseUrl = client.target("http://g-15.compute.dtu.dk:8015/");
     }
 
     public void requestTokens(String id, int count) {
@@ -40,11 +40,12 @@ public class TokenClient {
 
         if (response.getStatus() != 200){
             error = response.readEntity(String.class);
+            System.out.println(error);
             return;
         }
 
         JsonArray jsonArray = response.readEntity(JsonArray.class);
-
+        System.out.println(jsonArray.toString());
         for (int i = 0; i < jsonArray.size(); i++)
             tokens.add(jsonArray.getString(i));
 
