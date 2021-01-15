@@ -3,7 +3,7 @@ version: '3'
 services:
   demo:
     build: .
-    image: tokens
+    image: demo
     container_name: tokens
     ports:
-    - "8015:8080"
+     - "8015:8080"

@@ -6,7 +6,7 @@
 
 set -e
 
-mvn clean package -Dquarkus.package.type=uber-jar
+mvn clean package -Dquarkus.package.type=uber-jar -Dmaven.test.skip=true
 
 docker-compose up -d --build
 
