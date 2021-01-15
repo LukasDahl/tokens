@@ -80,15 +80,9 @@ public class QueueService implements IEventReceiver, IQueueService {
             var token = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
 
             Event response;
-            String account = tokenManager.consumeToken(token);
-            if (account.equals("Token not found")){
-                String reply = account;
-                response = new Event(TOKEN_VALIDATED_EVENT, reply);
-            }
-            else {
-                TokenInfo reply = new TokenInfo(token, account);
-                response = new Event(TOKEN_VALIDATED_EVENT, reply);
-            }
+
+            TokenInfo tokenInfo = tokenManager.consumeToken(token);
+            response = new Event(TOKEN_VALIDATED_EVENT, tokenInfo);
 
             try {
                 eventSender.sendEvent(response, EXCHANGE_NAME, QUEUE_TYPE, TOKEN_EVENT_BASE + TOKEN_VALIDATED_EVENT);

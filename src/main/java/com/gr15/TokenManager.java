@@ -1,6 +1,7 @@
 package com.gr15;
 
 import com.gr15.exceptions.QueueException;
+import com.gr15.messaging.models.TokenInfo;
 import com.gr15.messaging.rabbitmq.RabbitMqSender;
 
 import javax.json.Json;
@@ -26,6 +27,7 @@ public class TokenManager {
 
     private final QueueService queueService = new QueueService(new RabbitMqSender());
     private final HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
+    private final HashMap<String, LinkedList<String>> usedTokenMap = new HashMap<>();
 
     public static TokenManager getInstance(){
         if (instance == null) instance = new TokenManager();
@@ -49,23 +51,33 @@ public class TokenManager {
         return token;
     }
 
-    public String consumeToken(String token){
+    public TokenInfo consumeToken(String token){
         for (String key: tokenMap.keySet()){
             for (String storedToken: tokenMap.get(key)){
                 if (storedToken.equals(token)){
+                    usedTokenMap.get(key).add(storedToken);
                     tokenMap.get(key).remove(storedToken);
-                    return key;
+                    return new TokenInfo(storedToken, false, key);
                 }
             }
         }
-        return "Token not found";
+        for (String key: usedTokenMap.keySet()){
+            for (String storedToken: usedTokenMap.get(key)){
+                if (storedToken.equals(token)){
+                    return new TokenInfo(storedToken, true, key);
+                }
+            }
+        }
+        return new TokenInfo(token, false, "");
     }
 
     public boolean accountExists(String accountID) throws QueueException {
         boolean exists = queueService.accountExists(accountID);
         if (exists) {
-            if (!tokenMap.containsKey(accountID))
+            if (!tokenMap.containsKey(accountID)) {
                 tokenMap.put(accountID, new LinkedList<>());
+                usedTokenMap.put(accountID, new LinkedList<>());
+            }
         }
         return exists;
     }
