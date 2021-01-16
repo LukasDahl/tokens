@@ -20,7 +20,6 @@ import java.util.LinkedList;
 @Path("/tokens")
 public class TokenResource {
 
-    HashMap<String, LinkedList<String>> tokenMap = new HashMap<>();
     TokenManager tokenManager = TokenManager.getInstance();
 
     @POST

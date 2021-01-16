@@ -98,7 +98,6 @@ public class QueueService implements IEventReceiver, IQueueService {
 
             var response = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
             boolean exists = response.split(",")[1].equals("1");
-            System.out.println("Exists: " + exists);
             accountExistsResult.complete(exists);
 
         }
