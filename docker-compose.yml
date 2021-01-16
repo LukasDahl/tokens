@@ -4,6 +4,6 @@ services:
   tokens:
     build: .
     image: tokens
-    container_name: tokens
+    container_name: tokens_test
     ports:
      - "8015:8080"
