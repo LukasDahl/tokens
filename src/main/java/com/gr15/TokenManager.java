@@ -74,7 +74,7 @@ public class TokenManager {
 
     public boolean accountExists(String accountID) throws QueueException {
         boolean exists;
-        if (accountID.split(";")[1].equals("test"))
+        if (accountID.split(";").length > 1)
             exists = true;
         else
             exists = queueService.accountExists(accountID);
