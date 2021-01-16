@@ -48,7 +48,13 @@ public class QueueService implements IEventReceiver, IQueueService {
         this.eventSender = eventSender;
         RabbitMqListener r = new RabbitMqListener(this);
         try {
-            r.listen(EXCHANGE_NAME, QUEUE_TYPE, ALL_EVENT_BASE);
+            r.listen(EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+        r = new RabbitMqListener(this);
+        try {
+            r.listen(EXCHANGE_NAME, QUEUE_TYPE, TOKEN_EVENT_BASE + "#");
         } catch (Exception e) {
             throw new Error(e);
         }
@@ -97,23 +103,6 @@ public class QueueService implements IEventReceiver, IQueueService {
             System.out.println("Exists: " + exists);
             accountExistsResult.complete(exists);
 
-        }
-        else if (event.getEventType().equals(ACCOUNT_EXISTS_CMD)){
-
-            var account = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
-
-            if (!account.split(";")[1].equals("test"))
-                return;
-
-            Event response;
-
-            response = new Event(ACCOUNT_EXISTS_EVENT, account + ",1");
-
-            try {
-                eventSender.sendEvent(response, EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
-            } catch (Exception e) {
-                throw new QueueException("Error while validating account");
-            }
         }
         else {
             System.out.println("event ignored: " + event);
