@@ -1,6 +1,6 @@
 #!/bin/bash
 #title          :build.sh
-#description    :This script builds the payment service
+#description    :This script builds the tokens service
 #author         :Lukas Amtoft Dahl
 #==============================================================================
 

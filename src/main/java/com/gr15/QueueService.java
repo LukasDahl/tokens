@@ -14,7 +14,8 @@ import com.gr15.messaging.rabbitmq.RabbitMqListener;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * @author Wassim
+ * @author Lukas
+ * Based on Wassims class of the same name
  */
 public class QueueService implements IEventReceiver, IQueueService {
 
