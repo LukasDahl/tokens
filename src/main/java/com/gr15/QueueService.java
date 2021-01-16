@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 public class QueueService implements IEventReceiver, IQueueService {
 
     private static final String QUEUE_TYPE = "topic";
-    private static final String EXCHANGE_NAME = "tokensExchange";
+    private static final String EXCHANGE_NAME = "paymentsExchange";
 
     private static final String ALL_EVENT_BASE = "#";
 
