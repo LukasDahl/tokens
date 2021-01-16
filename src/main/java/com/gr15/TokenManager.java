@@ -106,5 +106,10 @@ public class TokenManager {
         return stringArray;
     }
 
+    public void deleteAccount(String accountID){
+        tokenMap.remove(accountID);
+        usedTokenMap.remove(accountID);
+    }
+
 
 }

@@ -40,6 +40,7 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String ACCOUNT_EXISTS_EVENT = "accountExistsResponse";
     // private static final String ACCOUNTS_VALIDATED_EVENT = "accountsValidated";
     // private static final String TRANSACTION_CREATED_EVENT = "transactionCreated";
+    private static final String ACCOUNT_DELETED_EVENT = "accountDeleted";
 
     private final IEventSender eventSender;
     private CompletableFuture<Boolean> accountExistsResult;
@@ -48,7 +49,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         this.eventSender = eventSender;
         RabbitMqListener r = new RabbitMqListener(this);
         try {
-            r.listen(EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + ACCOUNT_EXISTS_EVENT);
+            r.listen(EXCHANGE_NAME, QUEUE_TYPE, ACCOUNT_EVENT_BASE + "#");
         } catch (Exception e) {
             throw new Error(e);
         }
@@ -104,6 +105,11 @@ public class QueueService implements IEventReceiver, IQueueService {
             accountExistsResult.complete(exists);
 
         }
+        else if (event.getEventType().equals(ACCOUNT_DELETED_EVENT)){
+            var response = new Gson().fromJson(new Gson().toJson(event.getEventInfo()), String.class);
+            TokenManager.getInstance().deleteAccount(response);
+        }
+
         else {
             System.out.println("event ignored: " + event);
         }
