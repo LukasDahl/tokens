@@ -7,3 +7,6 @@ services:
     container_name: tokens_test
     ports:
      - "8015:8080"
+  rabbitMq:
+    image: rabbitmq
+    container_name: rabbitMq_container_tokens
