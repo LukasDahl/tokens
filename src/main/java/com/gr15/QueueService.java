@@ -24,7 +24,7 @@ public class QueueService implements IEventReceiver, IQueueService {
 
     private static final String ALL_EVENT_BASE = "#";
 
-    //private static final String TOKEN_CMD_BASE = "token.cmds.";
+    private static final String TOKEN_CMD_BASE = "token.cmds.";
     private static final String TOKEN_EVENT_BASE = "token.events.";
     private static final String ACCOUNT_CMD_BASE = "account.cmds.";
     private static final String ACCOUNT_EVENT_BASE = "account.events.";
@@ -33,13 +33,10 @@ public class QueueService implements IEventReceiver, IQueueService {
     private static final String VALIDATE_TOKEN_CMD = "validateToken";
     // private static final String VALIDATE_ACCOUNT_CMD = "validateAccount";
     private static final String ACCOUNT_EXISTS_CMD = "accountExistsRequest";
-    // private static final String VALIDATE_ACCOUNTS_CMD = "validateAccounts";
 
     private static final String TOKEN_VALIDATED_EVENT = "tokenValidated";
     // private static final String ACCOUNT_VALIDATED_EVENT = "accountValidated";
     private static final String ACCOUNT_EXISTS_EVENT = "accountExistsResponse";
-    // private static final String ACCOUNTS_VALIDATED_EVENT = "accountsValidated";
-    // private static final String TRANSACTION_CREATED_EVENT = "transactionCreated";
     private static final String ACCOUNT_DELETED_EVENT = "accountDeleted";
 
     private final IEventSender eventSender;
@@ -55,7 +52,7 @@ public class QueueService implements IEventReceiver, IQueueService {
         }
         r = new RabbitMqListener(this);
         try {
-            r.listen(EXCHANGE_NAME, QUEUE_TYPE, TOKEN_EVENT_BASE + "#");
+            r.listen(EXCHANGE_NAME, QUEUE_TYPE, TOKEN_CMD_BASE + "#");
         } catch (Exception e) {
             throw new Error(e);
         }
