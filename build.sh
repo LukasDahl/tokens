@@ -15,5 +15,3 @@ docker-compose up -d --build
 sleep 2s
 
 mvn test
-
-docker-compose down
