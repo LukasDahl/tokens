@@ -24,5 +24,5 @@ Feature: Token
   Scenario: Request 6 tokens from scratch in one go
     Given a customer with a random account id
     When the customer requests 6 tokens
-    Then he has 0 tokens
+    Then he has 1 tokens
     And he has gotten an error
