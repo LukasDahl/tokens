@@ -23,7 +23,8 @@ public class TokenClient {
 
     public TokenClient() {
         Client client = ClientBuilder.newClient();
-        baseUrl = client.target("http://g-15.compute.dtu.dk:8015/");
+        baseUrl = client.target("http://localhost:8015/");
+        //baseUrl = client.target("http://g-15.compute.dtu.dk:8015/");
     }
 
     public void requestTokens(String id, int count) {

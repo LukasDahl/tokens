@@ -12,7 +12,7 @@ docker build -t tokens .
 
 docker-compose up -d --build
 
-sleep 2s
+sleep 10s
 
 mvn test
 
